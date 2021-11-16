@@ -1,0 +1,143 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\begin{document}
+
+\title{Activity classification using joint data - A Case study\\
+
+
+}
+
+\author{\IEEEauthorblockN{ Abishek Kumar}
+\IEEEauthorblockA{\textit{Drexel University} \\
+\textit{Dept. of Digital Media}\\
+Philadelphia, PA \\
+ask85@drexel.edu}
+\and
+\IEEEauthorblockN{ Prateek Goel}
+\IEEEauthorblockA{\textit{Drexel University} \\
+\textit{Dept. of Information Sciences}\\
+Philadelphia, PA \\
+pg427@drexel.edu
+}
+
+}
+
+\maketitle
+
+\begin{abstract}
+This project is an extension of the work done by Bearman et. al \cite{b1}. The work done in this project takes into consideration joint data from a large annotated activity data set and determines activities. The final product is a case study of various classification algorithms used to classify activities using the annotated joint data and a report of associated accuracy metrics for each of the methods.
+\end{abstract}
+
+\begin{IEEEkeywords}
+case study, activities, joints, classification
+\end{IEEEkeywords}
+
+
+
+\section{Background}
+
+\subsection{Activity classification}
+
+Using simple machine learning models and inbuilt libraries, various groups have combined the power of CNNs (Convolutional Neural Networks) and image data of Motion data sets to determine activities in the images \cite{b1}. Joint data is valuable in computing pose information as an estimation paradigm, as such pose information can be used to determine activities in input images. However determining human poses or the problem of human pose estimation is a non-trivial problem that involves identification of major body parts and joints. This step has been crucial in detecting activities, however the approach of this paper deals with avoiding the pose estimation problem and directly using the annotated joint data from an appropriate activity data set i.e. MPII human pose data set\cite{b2} to classify activities.  
+
+\subsection{Joint data}
+
+The MPII human pose data set\cite{b2} is state of the art benchmark for human pose evaluation and activity classification with general categories such as carpentry, running, eating etc. but also contains specific activities under these categories such as motor scooter, ice skating, wind surfing etc. \textbf{The project aims to only classify the general categories.} The data set includes around 25K images containing over 40K people with annotated body joints. The images were systematically collected using an established taxonomy of every day human activities. Overall the data set covers 410 human activities and each image is provided with an activity label. Each image was extracted from a YouTube video and provided with preceding and following un-annotated frames. In addition, for the test set we obtained richer annotations including body part occlusions and 3D torso and head orientations.
+
+\section{Related Work}
+
+Cipitelli et. al \cite{b3} had previously created an activity classifier using RGBD-sensors to aid assisted living individuals and their care takers to determine what the patient is doing at any given time. They used an SVM to determine multiclass activities from skeleton data acquisition from RGBD-sensors. Bearman et. al \cite{b1} produced a regression classifier using a CNN for pose estimation on the LEEDS sports data set and then used resulting human poses as inputs to another CNN classifier that determined the appropriate activities in the MPII data set.
+
+\section{Methodology}
+
+The methods in this paper will include a variety of classification algorithms to test the joint data set on. Firstly the joint data needs to be preprocessed for the entire MPII human pose data set. The joint data needs to be derived as an excel table wherein there are 2D coordinates for each of the 15 joints in the data set for each activity. The training set after preprocessing contains sheets with 2D joint data and the activity labels for each image in the data set. The methods described determine if knowing annotated joint data would improve the accuracy of classification algorithms. 
+
+\subsection{Creating a JSON file}\label{AA}
+The MPII data set is first obtained as a .mat file and converted into a JSON file to be more human readable. However the JSON file contains a lot of garbage data that needs to be removed, during this process the activity label and 2D joint coordinates for each of the joints in an image as derived. The output of this method is the prior-mentioned excel data sheet.
+\begin{figure}
+    \centerline{\includegraphics[width=8cm,height=12cm,keepaspectratio]{Images/Joint Datapng.png}}
+    \caption{Excel Data Snippet}
+    \label{fig}
+\end{figure}
+
+
+\subsection{Algorithms}
+All algorithms are implemented with standard library functions. The joint data set is classified using the following in the case study.
+\begin{itemize}
+\item Decision tree classifier: are a non-parametric supervised learning method used for classification and regression. The goal is to create a model that predicts the value of a target variable by learning simple decision rules inferred from the data features. The cost of using the tree (i.e., predicting data) is logarithmic in the number of data points used to train the tree.
+\begin{figure}
+\centerline{\includegraphics[width=8cm,height=12cm,keepaspectratio]{Images/Decision_Tree.PNG}}
+\caption{Decision Tree algorithm}
+\label{fig}
+\end{figure}
+\item Support vector machine classifier: is capable of performing multi-class classification on a data set. They implement the “one-against-one” approach (Knerr et al., 1990) for multi- class classification. The aim is to maximize distance to closest example (of each type).
+\item K-nearest neighbors classifier: is a type of instance-based learning or non-generalizing learning: it does not attempt to construct a general internal model, but simply stores instances of the training data. Classification is computed from a simple majority vote of the nearest neighbors of each point: a query point is assigned the data class which has the most representatives within the nearest neighbors of the point.
+\begin{figure}[h]
+\centerline{\includegraphics[width=8cm,height=12cm,keepaspectratio]{Images/knn.PNG}}
+\caption{K-nearest neighbors algorithm}
+\label{fig}
+\end{figure}
+\item Naive Bayes Classifier: is a probabilistic classifier that makes classifications using the Maximum A Posteriori decision rule in a Bayesian setting. It can also be represented using a very simple Bayesian network.
+\end{itemize}
+
+\section{Results}
+\subsection{Accuracy metric table}
+The following table shows the various accuracies for the algorithms implemented in this case study. 
+
+\begin{table}[h]
+\caption{ACCURACY TABLE}
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+\textbf{Table}&\textbf{Accuracy} \\
+\hline
+KNN & 0.294  \\
+Decision Tree & 0.239 \\
+SVM & 0.162\\
+Naive Bayes & 0.07\\
+\hline
+\end{tabular}
+\label{tab1}
+\end{center}
+\end{table}
+
+\subsection{Confusion Matrices}
+ The confusion matrices below show the correct number of predictions made with KNN and Decision Tree classifiers (Fig 4 and Fig 5). From the results it can be seen, in both KNN and Decision Trees, the number of correct predictions for any activity is clearly higher than the rest. Inspite of having incorrect classifications as well, the number of correct activity classifications based only on joint data are definitely higher (61 to 70 out of 100 per activity).
+\begin{figure}
+\centerline{\includegraphics[width=8cm,height=12cm,keepaspectratio]{Images/KNN_cm.png}}
+\caption{Confusion matrix - KNN}
+\label{fig}
+\end{figure}
+\begin{figure}
+\centerline{\includegraphics[width=8cm,height=12cm,keepaspectratio]{Images/DT_cm.png}}
+\caption{Confusion Matrix - Decision Tree algorithm}
+\label{fig}
+\end{figure}
+
+
+\section{Conclusion and Limitations}
+
+Based on the results displayed, we can safely conclude that joint locations have an impact when classifying images based on the activities. As can be seen by the confusion matrices, the number of correct predictions are the highest against the incorrect predictions. So, although the accuracy of the entire model is low, it gives enough information to place reliance on the idea that joint data can indeed prove useful.
+
+During the course of our project, we came across multiple obstacles that have caused us to change our direction. First, due to time constraints and lack of server space we were forced to alter our approach and thus decided to use existing low accuracy models to begin our study (KNNs, Decision Trees etc.) as opposed to CNNs as discussed originally. Furthermore, for same reasons we were forced to use just joint annotations as opposed to superimposing joint data with image data. Nevertheless, using just the joint annotations, our study still provides enough results to show us moving in the right direction.
+
+
+\begin{thebibliography}{00}
+\bibitem{b1} Bearman, Amy, and Catherine Dong. "Human pose estimation and activity classification using convolutional neural networks." CS231n Course Project Reports (2015).
+\bibitem{b2} MPII human pose dataset.
+\bibitem{b3} Cippitelli, Enea, et al. "A human activity recognition system using skeleton data from RGBD sensors." Computational intelligence and neuroscience 2016 (2016).
+
+\end{thebibliography}
+\vspace{12pt}
+
+
+\end{document}
